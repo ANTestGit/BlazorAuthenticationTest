@@ -1,0 +1,17 @@
+﻿@page "/user-test"
+@using Microsoft.AspNetCore.Components.Authorization
+<h3>User Test Page client</h3>
+<CascadingAuthenticationState>
+    <AuthorizeView>
+        <Authorized>
+            <h1>Welcome back, user!</h1>
+        </Authorized>
+        <NotAuthorized>
+            <p>Please log in to access this content.</p>
+        </NotAuthorized>
+    </AuthorizeView>
+</CascadingAuthenticationState>
+
+@code {
+
+}

@@ -5,3 +5,9 @@
 <h1>Hello, world!</h1>
 
 Welcome to your new app.
+server side IsAuthenticated:<div>@HttpContext.User.Identity?.IsAuthenticated</div>
+@code
+{
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+}
