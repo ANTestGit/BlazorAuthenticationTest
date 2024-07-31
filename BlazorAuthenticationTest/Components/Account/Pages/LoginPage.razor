@@ -1,0 +1,73 @@
+﻿@page "/login"
+
+@using System.ComponentModel.DataAnnotations
+@using BlazorAuthenticationTest.Controllers
+
+@inject NavigationManager Navigation
+@inject IHttpClientFactory HttpClientFactory
+
+<h3>Login</h3>
+
+@if (!string.IsNullOrEmpty(errorMessage))
+{
+    <div class="alert alert-danger">@errorMessage</div>
+}
+
+<EditForm Model="@loginModel" FormName="login-data" OnValidSubmit="@HandleLogin" style="width: 200px;">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <div class="form-group">
+        <label>Email:</label>
+        <InputText @bind-Value="loginModel.Email" class="form-control" />
+        <ValidationMessage For="@(() => loginModel.Email)" />
+    </div>
+
+    <div class="form-group">
+        <label>Password:</label>
+        <InputText @bind-Value="loginModel.Password" type="password" class="form-control" />
+        <ValidationMessage For="@(() => loginModel.Password)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Login</button>
+</EditForm>
+
+@code {
+    private LoginModel loginModel = new LoginModel(){Email = AccountController.FixedEmail,Password = AccountController.FixedPassword};
+    private string errorMessage;
+    
+    [CascadingParameter]
+    private HttpContext HttpContext { get; set; } = default!;
+
+    private async Task HandleLogin()
+    {
+        var content = new FormUrlEncodedContent(new[]
+                                                    {
+                                                        new KeyValuePair<string, string>("email", loginModel.Email),
+                                                        new KeyValuePair<string, string>("password", loginModel.Password)
+                                                    });
+        var httpClient = HttpClientFactory.CreateClient(nameof(BaseAuthenticationStateProvider));
+        var result = await httpClient.PostAsync("api/Account/Login", content);
+
+        var cookieOptions = new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(1), Secure = true };
+        HttpContext.Response.Cookies.Append("ServerTest", DateTime.Now.ToLongTimeString(), cookieOptions);
+
+        if (result.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo("/",true);
+        }
+        else
+        {
+            errorMessage = "Invalid login attempt.";
+        }
+    }
+
+    public class LoginModel
+    {
+        [Required]
+        public string Email { get; set; }
+
+        [Required]
+        public string Password { get; set; }
+    }
+}

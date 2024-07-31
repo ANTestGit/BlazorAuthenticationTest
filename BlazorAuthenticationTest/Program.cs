@@ -1,5 +1,8 @@
-using BlazorAuthenticationTest.Client.Pages;
+using BlazorAuthenticationTest.Client;
 using BlazorAuthenticationTest.Components;
+
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace BlazorAuthenticationTest
 {
@@ -13,6 +16,23 @@ namespace BlazorAuthenticationTest
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
+
+            // Read base address from configuration
+            var baseAddress = builder.Configuration["ApiSettings:BaseAddress"];
+            builder.Services.AddHttpClient<BaseAuthenticationStateProvider>( client => { client.BaseAddress = new Uri(baseAddress); });
+
+            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProviderServer>();
+            builder.Services.AddControllers();
+
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(
+                    options =>
+                        {
+                            options.LoginPath = "/login";
+                            options.AccessDeniedPath = "/access-denied";
+                        });
+
+            builder.Services.AddAuthorizationCore();
 
             var app = builder.Build();
 
@@ -33,10 +53,16 @@ namespace BlazorAuthenticationTest
             app.UseStaticFiles();
             app.UseAntiforgery();
 
+            app.UseAuthentication();
+            app.UseAuthorization();
+
             app.MapRazorComponents<App>()
                 .AddInteractiveServerRenderMode()
                 .AddInteractiveWebAssemblyRenderMode()
                 .AddAdditionalAssemblies(typeof(Client._Imports).Assembly);
+
+            app.MapControllers();
+            app.MapFallbackToFile("index.html");
 
             app.Run();
         }
