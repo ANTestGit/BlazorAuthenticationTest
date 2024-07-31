@@ -21,7 +21,7 @@ namespace BlazorAuthenticationTest
             var baseAddress = builder.Configuration["ApiSettings:BaseAddress"];
             builder.Services.AddHttpClient<BaseAuthenticationStateProvider>( client => { client.BaseAddress = new Uri(baseAddress); });
 
-            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProviderServer>();
+            //builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProviderServer>();
             builder.Services.AddControllers();
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

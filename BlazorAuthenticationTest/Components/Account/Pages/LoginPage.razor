@@ -1,7 +1,10 @@
 ﻿@page "/login"
 
 @using System.ComponentModel.DataAnnotations
+@using System.Security.Claims
 @using BlazorAuthenticationTest.Controllers
+@using Microsoft.AspNetCore.Authentication
+@using Microsoft.AspNetCore.Authentication.Cookies
 
 @inject NavigationManager Navigation
 @inject IHttpClientFactory HttpClientFactory
@@ -41,20 +44,18 @@
 
     private async Task HandleLogin()
     {
-        var content = new FormUrlEncodedContent(new[]
-                                                    {
-                                                        new KeyValuePair<string, string>("email", loginModel.Email),
-                                                        new KeyValuePair<string, string>("password", loginModel.Password)
-                                                    });
-        var httpClient = HttpClientFactory.CreateClient(nameof(BaseAuthenticationStateProvider));
-        var result = await httpClient.PostAsync("api/Account/Login", content);
-
-        var cookieOptions = new CookieOptions { Expires = DateTimeOffset.UtcNow.AddDays(1), Secure = true };
-        HttpContext.Response.Cookies.Append("ServerTest", DateTime.Now.ToLongTimeString(), cookieOptions);
-
-        if (result.IsSuccessStatusCode)
+        if (loginModel.Email == AccountController.FixedEmail && loginModel.Password == AccountController.FixedPassword)
         {
-            Navigation.NavigateTo("/",true);
+            var claims = new List<Claim> { new Claim(ClaimTypes.Name, loginModel.Email) };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(claimsIdentity));
+            
+
+            Navigation.NavigateTo("/", true);
         }
         else
         {

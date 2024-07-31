@@ -15,7 +15,7 @@ namespace BlazorAuthenticationTest.Client
             
             builder.Services.AddAuthorizationCore();
             // Register the custom authentication state provider
-            builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProviderClient>();
+            //builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProviderClient>();
             await builder.Build().RunAsync();
         }
     }
