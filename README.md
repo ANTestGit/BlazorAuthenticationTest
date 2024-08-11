@@ -40,4 +40,31 @@ private async Task HandleLogin()
 As I know:
 A full page reload after setting the cookie is essential to ensure that all components and the Blazor infrastructure are aware of the new authentication state. This reload causes the browser to include the authentication cookie in the request, which the server uses to authenticate the user and return the appropriate UI components.
 
-But is is not working for some reason
+# Problem 2
+If I call on server side client side component with render mode *Interactive auto*
+
+```html
+<UserInfo @rendermode="InteractiveAuto"/>
+```
+and use into component AuthenticationStateProvider
+```csharp
+@inject AuthenticationStateProvider AuthStateProvider
+```
+Then I can observe curious behaviour
+As long as I login or logout I will receive the following error:
+
+```txt
+Error: One or more errors occurred. (Cannot provide a value for property 'AuthStateProvider' on type 'BlazorAuthenticationTest.Client.Components.UserInfo'. There is no registered service of type 'Microsoft.AspNetCore.Components.Authorization.AuthenticationStateProvider'.)
+    at Jn (marshal-to-js.ts:349:18)
+    at Tl (marshal-to-js.ts:306:28)
+    at 00b21cf6:0x1fad7
+    at 00b21cf6:0x1bf9f
+    at 00b21cf6:0xf16c
+    at 00b21cf6:0x1e7f1
+    at 00b21cf6:0x1efe7
+    at 00b21cf6:0xcfbc
+    at 00b21cf6:0x44213
+    at e.<computed> (cwraps.ts:338:24)
+```
+
+But If I clear all cookies error is disappeared. By different project it could help clear solution and build again.

@@ -32,7 +32,7 @@ namespace BlazorAuthenticationTest
                             options.AccessDeniedPath = "/access-denied";
                         });
 
-            builder.Services.AddAuthorizationCore();
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
