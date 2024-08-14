@@ -1,8 +1,7 @@
 using System.Diagnostics;
 using System.Security.Claims;
 
-using ActionManager.Client;
-
+using BlazorAuthenticationTest.Client;
 using BlazorAuthenticationTest.Client.Components;
 
 using Microsoft.AspNetCore.Components;

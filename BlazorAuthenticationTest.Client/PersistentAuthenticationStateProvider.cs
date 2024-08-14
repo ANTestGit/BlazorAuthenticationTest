@@ -1,7 +1,5 @@
 using System.Security.Claims;
 
-using ActionManager.Client;
-
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 
