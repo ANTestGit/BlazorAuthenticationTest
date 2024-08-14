@@ -24,6 +24,7 @@ namespace BlazorAuthenticationTest
 
             services.AddControllers();
 
+            services.AddCascadingAuthenticationState();
             services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)

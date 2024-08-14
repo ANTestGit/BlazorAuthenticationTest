@@ -30,34 +30,48 @@
                 <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
             </NavLink>
         </div>
-        
+
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="user-test">
                 <span class="bi" aria-hidden="true"></span> User on client side
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="protected">
-                <span class="bi bi-shield-lock-fill-nav-menu" aria-hidden="true"></span> Protected
-            </NavLink>
-        </div>
+        <AuthorizeView>
+            <Authorized>
 
-        @if (!isAuthenticated)
-        {
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="login">
-                    <span class="bi bi-box-arrow-in-right-nav-menu" aria-hidden="true"></span> Login
-                </NavLink>
-            </div>
-        }
-        else
-        {
-            <div class="nav-item px-3">
-                <NavLink class="nav-link" href="logout" @onclick="Logout">
-                    <span class="bi bi-box-arrow-right-nav-menu" aria-hidden="true"></span> Logout
-                </NavLink>
-            </div>
-        }
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="protected">
+                        <span class="bi bi-shield-lock-fill-nav-menu" aria-hidden="true"></span> Protected
+                    </NavLink>
+                </div>
+
+                @if (!isAuthenticated)
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="login">
+                            <span class="bi bi-box-arrow-in-right-nav-menu" aria-hidden="true"></span> Login
+                        </NavLink>
+                    </div>
+                }
+                else
+                {
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="logout" @onclick="Logout">
+                            <span class="bi bi-box-arrow-right-nav-menu" aria-hidden="true"></span> Logout
+                        </NavLink>
+                    </div>
+                }
+            </Authorized>
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="login">
+                        <span class="bi bi-box-arrow-in-right-nav-menu" aria-hidden="true"></span> Login
+                    </NavLink>
+                </div>
+                
+            </NotAuthorized>
+
+        </AuthorizeView>
     </nav>
 </div>
 
