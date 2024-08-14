@@ -13,18 +13,20 @@ namespace BlazorAuthenticationTest
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
-            builder.Services.AddRazorComponents()
+            var services = builder.Services;
+            services.AddRazorComponents()
                 .AddInteractiveServerComponents()
                 .AddInteractiveWebAssemblyComponents();
 
             // Read base address from configuration
             var baseAddress = builder.Configuration["ApiSettings:BaseAddress"];
-            builder.Services.AddHttpClient<BaseAuthenticationStateProvider>( client => { client.BaseAddress = new Uri(baseAddress); });
+            services.AddHttpClient<BaseAuthenticationStateProvider>( client => { client.BaseAddress = new Uri(baseAddress); });
 
-            //builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProviderServer>();
-            builder.Services.AddControllers();
+            services.AddControllers();
 
-            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            services.AddScoped<AuthenticationStateProvider, PersistingRevalidatingAuthenticationStateProvider>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(
                     options =>
                         {
@@ -32,7 +34,7 @@ namespace BlazorAuthenticationTest
                             options.AccessDeniedPath = "/access-denied";
                         });
 
-            builder.Services.AddAuthorization();
+            services.AddAuthorization();
 
             var app = builder.Build();
 

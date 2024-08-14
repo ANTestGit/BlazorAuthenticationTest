@@ -69,3 +69,16 @@ Error: One or more errors occurred. (Cannot provide a value for property 'AuthSt
 ```
 
 Interestingly, if you clear all cookies, the error disappears. In some cases, clearing the solution and rebuilding the project may also resolve the issue.
+
+### Response
+When running in auto mode you have 2 separate processes, one for server and one for webassembly. They are completely independent, and you are responsible for flowing any necessary information between the two.
+
+Your app will potentially execute in three different scopes:
+
+    SSR when the app prerenders.
+    Server Interactive: The first time the interactive component renders on the server.
+    Webassembly Interactive: The first time the interactive component renders on webassembly.
+
+These are three different DI scopes and 2 different processes (server/browser) and for all intents and purposes, three different instantiations of most services.
+
+You need to handle the setup and transfer any information between any of the three scopes. Our implementation on the template for auth shows this pattern.
