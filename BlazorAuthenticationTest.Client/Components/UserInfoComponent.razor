@@ -33,7 +33,14 @@
 
     private void UpdateStatusTitle()
     {
-        _statusTitle = $"User {_name}, e-mail{_email}";
+        if (string.IsNullOrWhiteSpace(_email))
+        {
+            _statusTitle = $"User {_name}";
+        }
+        else
+        {
+            _statusTitle = $"User {_name}, e-mail {_email}";
+        }   
     }
 
     private void OnLogin()
