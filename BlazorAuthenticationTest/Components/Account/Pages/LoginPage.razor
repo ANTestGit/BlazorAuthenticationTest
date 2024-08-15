@@ -46,7 +46,12 @@
     {
         if (loginModel.Email == AccountController.FixedEmail && loginModel.Password == AccountController.FixedPassword)
         {
-            var claims = new List<Claim> { new Claim(ClaimTypes.Name, loginModel.Email) };
+            var claims = new List<Claim>
+                             {
+                                 new Claim(ClaimTypes.Name, "Demo"),
+                                 new Claim(ClaimTypes.NameIdentifier, "123456789"), 
+                                 new Claim(ClaimTypes.Email, loginModel.Email),
+                             };
 
             var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
